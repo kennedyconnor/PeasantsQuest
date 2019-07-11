@@ -8,6 +8,6 @@ namespace CastleGrimtol.Project.Interfaces
     string Name { get; set; }
     string Description { get; set; }
     List<Item> Items { get; set; }
-    Dictionary<string, IArea> Directions { get; set; }
+    Dictionary<string, Area> Directions { get; set; }
   }
 }
