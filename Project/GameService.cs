@@ -73,8 +73,7 @@ namespace CastleGrimtol.Project
     {
       if (input.Length > 1)
       {
-        Console.WriteLine($"You try to talk to {input[1]}.");
-        //CurrentArea.Talk(character);
+        CurrentArea.Talk(input[1]);
       }
       else { Console.WriteLine("Don't talk to yourself."); }
     }

@@ -48,6 +48,21 @@ namespace CastleGrimtol.Project.Models
       return;
     }
 
+    public void Talk(string character)
+    {
+      foreach (var c in Characters)
+      {
+        if (c.Name.ToLower() == character)
+        {
+          c.Talk();
+        }
+        else
+        {
+          System.Console.WriteLine("It's sad when you have to make up people to talk to.");
+        }
+
+      }
+    }
     public void AddDirection(string direction, Area area)
 
     {

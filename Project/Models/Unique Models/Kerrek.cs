@@ -3,7 +3,10 @@ namespace CastleGrimtol.Project.Models
   class Kerrek : Character
   {
     public bool isAlive = true;
-
+    public override void Talk()
+    {
+      System.Console.WriteLine(Dialogue["alive"]);
+    }
     public Kerrek() : base()
     {
       Name = "Kerrek";
