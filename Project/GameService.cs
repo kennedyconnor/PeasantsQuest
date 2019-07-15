@@ -9,11 +9,12 @@ namespace CastleGrimtol.Project
   {
     public Area CurrentArea { get; set; }
     public Player CurrentPlayer { get; set; }
+    public bool Running = true;
 
     public void GetUserInput()
     {
       string[] input = Console.ReadLine().ToLower().Split(" ");
-
+      Console.WriteLine();
       switch (input[0])
       {
         case "go":
@@ -22,7 +23,7 @@ namespace CastleGrimtol.Project
 
         case "get":
         case "take":
-          TakeItem(input);
+          TakeItem(input[1]);
           break;
 
         case "look":
@@ -34,6 +35,13 @@ namespace CastleGrimtol.Project
           Talk(input);
           break;
 
+        case "inventory":
+          Inventory();
+          break;
+
+        case "use":
+          UseItem(input[1]);
+          break;
       }
     }
 
@@ -57,7 +65,10 @@ namespace CastleGrimtol.Project
 
     public void Inventory()
     {
-
+      foreach (Item item in CurrentPlayer.Inventory)
+      {
+        Console.WriteLine($"  {item.Name} --- {item.Description}");
+      }
     }
 
     public void Look(string[] input)
@@ -80,7 +91,7 @@ namespace CastleGrimtol.Project
 
     public void Quit()
     {
-
+      Running = false;
     }
 
     public void Reset()
@@ -116,9 +127,9 @@ press any button to continue
       //Items
 
       Item baby = new Item("Baby", "Awww! Peasant babies are adorable. No wonder they fetch such a pretty penny on the black market.");
-      Item belt = new Item("Kerrek Belt", "Phew! This thing stinks like all getout. Why couldn't the Kerrek have kidnapped a hot wench or something that you could have saved?");
-      Item robe = new Item("Peasant Robe", "A vintage peasant robe! Just like grampa used to wear.");
-      Item sword = new Item("TrogSword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.");
+      Item belt = new Item("Belt", "Phew! This thing stinks like all getout. Why couldn't the Kerrek have kidnapped a hot wench or something that you could have saved?");
+      Item robe = new Item("Robe", "A vintage peasant robe! Just like grampa used to wear.");
+      Item sword = new Item("Sword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.");
       Item trinket = new Item("Trinket", "This trinket is weird. It looks like it can either kill you or make you the hit of your Christmas party.");
       Item map = new Item("Map", "A map of Peasantry. The only remaining posession from your burninated cottage.");
       Item shirt = new Item("Shirt", "This has got to be your favorite T-shirt ever. Oh, the times you had at Scalding Lake. Canoeing, fishing, stoning heathens. What a Blast!");
@@ -136,8 +147,10 @@ press any button to continue
 
       //Characters
       Kerrek kerrek = new Kerrek();
+      Knight knight = new Knight();
 
       a1.AddCharacter(kerrek);
+      b2.AddCharacter(knight);
 
 
 
@@ -177,9 +190,7 @@ press any button to continue
       Intro();
       Console.WriteLine($"{CurrentArea.Description}");
 
-      bool running = true;
-
-      while (running)
+      while (Running)
       {
         GetUserInput();
 
@@ -187,14 +198,32 @@ press any button to continue
 
     }
 
-    public void TakeItem(string[] input)
+    public void TakeItem(string input)
     {
+      Item item = CurrentArea.TakeItem(input);
+      if (item == null)
+      {
+        Console.WriteLine("You probably WISH you could get that.");
+      }
+      else
+      {
+        CurrentPlayer.Inventory.Add(item);
+        CurrentArea.Items.Remove(item);
+        Console.WriteLine($"{item.Name} placed in your inventory.");
+      }
 
     }
 
-    public void UseItem(string[] input)
+    public void UseItem(string input)
     {
-
+      if (CurrentPlayer.Inventory.Find(i => i.Name == input) != null)
+      {
+        CurrentArea.UseItem(input);
+      }
+      else
+      {
+        Console.WriteLine("You don't even have one of those.");
+      }
     }
   }
 }

@@ -63,6 +63,33 @@ namespace CastleGrimtol.Project.Models
 
       }
     }
+
+    public Item TakeItem(string input)
+    {
+      Item item = Items.Find(i => i.Name.ToLower() == input);
+      return item;
+    }
+
+    public void UseItem(string input)
+    {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void AddDirection(string direction, Area area)
 
     {
