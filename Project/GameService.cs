@@ -42,6 +42,14 @@ namespace CastleGrimtol.Project
         case "use":
           UseItem(input[1]);
           break;
+
+        case "help":
+          Help();
+          break;
+
+        default:
+          Console.WriteLine("Enter 'Help' for help, which you clearly need.");
+          break;
       }
     }
 
@@ -53,6 +61,7 @@ namespace CastleGrimtol.Project
         return;
       }
       CurrentArea = CurrentArea.Go(input[1]);
+      CurrentArea.Checks(CurrentPlayer);
       Console.WriteLine();
       Console.WriteLine(CurrentArea.Description);
       Console.WriteLine();
@@ -60,7 +69,14 @@ namespace CastleGrimtol.Project
 
     public void Help()
     {
-
+      Console.WriteLine(@"
+Use 'Look' to look around. You can look at individual things too!
+Use 'Talk' to talk to people. No promise they'll talk back though.
+Use 'Get' or 'Take' to get items.
+Use 'Use' to use an item in your inventory.
+Use 'Inventory' to look at your inventory.
+Use 'Quit' to exit game.
+      ");
     }
 
     public void Inventory()
@@ -126,31 +142,32 @@ press any button to continue
     {
       //Items
 
-      Item baby = new Item("Baby", "Awww! Peasant babies are adorable. No wonder they fetch such a pretty penny on the black market.");
-      Item belt = new Item("Belt", "Phew! This thing stinks like all getout. Why couldn't the Kerrek have kidnapped a hot wench or something that you could have saved?");
-      Item robe = new Item("Robe", "A vintage peasant robe! Just like grampa used to wear.");
-      Item sword = new Item("Sword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.");
-      Item trinket = new Item("Trinket", "This trinket is weird. It looks like it can either kill you or make you the hit of your Christmas party.");
-      Item map = new Item("Map", "A map of Peasantry. The only remaining posession from your burninated cottage.");
-      Item shirt = new Item("Shirt", "This has got to be your favorite T-shirt ever. Oh, the times you had at Scalding Lake. Canoeing, fishing, stoning heathens. What a Blast!");
+      Item baby = new Item("Baby", "Awww! Peasant babies are adorable. No wonder they fetch such a pretty penny on the black market.", "");
+      Item belt = new Item("Belt", "Phew! This thing stinks like all getout. Why couldn't the Kerrek have kidnapped a hot wench or something that you could have saved?", "You claim the Kerrek's cool belt as your trophy. It stinks just like him! You start to miss him, a little.");
+      Item robe = new Item("Robe", "A vintage peasant robe! Just like grampa used to wear.", "");
+      Item sword = new Item("Sword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.", "");
+      Item trinket = new Item("Trinket", "This trinket is weird. It looks like it can either kill you or make you the hit of your Christmas party.", "You reach into the bush to snag you some berries but instead find a Super Trinket! These things are awesome! You have a sneaking suspicion that SOMEONE in this game will need this thing.");
+      Item map = new Item("Map", "A map of Peasantry. The only remaining posession from your burninated cottage.", "");
+      Item shirt = new Item("Shirt", "This has got to be your favorite T-shirt ever. Oh, the times you had at Scalding Lake. Canoeing, fishing, stoning heathens. What a Blast!", "");
 
       //Rooms
 
       Area a1 = new Area("The Stomping Grounds", "The Kerrek is stomping around angrily in a clearing covered in bramblevine and flattened grass. And it smells like a public latrine.");
-      Area a2 = new Area("Some Berry Bushes", "You arrive at a peaceful meadow with what appear to be four crunch berry bushes but you can't be sure.");
+      PeacefulMeadow a2 = new PeacefulMeadow();
       Area a3 = new Area("A Peasant Cottage", "There's a ranch-style thatched roof cottage here. A woman sits outside in a rocking chair, holding a swaddled baby.");
       Area b1 = new Area("Pebble Lake", " There's definitely half a lake here with a sandy shore.");
-      Area b2 = new Area("The Mountain Pass", "You've reached the mountain pass that leads to Trogdor's lair. A royal knight blocks the entrance.");
+      MountainPass b2 = new MountainPass();
       Area b3 = new Area("Your Burninated Cottage", "The remains of your thatched-roof cottage lie before you. Some of it is still burning. You swear revenge against Trogdor. ");
-      Area c2 = new Area("Trogdor's Lair", "You're in a giant cavern which houses a giant dragon. You didn't shrink or anything.");
 
 
       //Characters
       Kerrek kerrek = new Kerrek();
       Knight knight = new Knight();
+      Lady lady = new Lady();
 
       a1.AddCharacter(kerrek);
       b2.AddCharacter(knight);
+      a2.AddCharacter(lady);
 
 
 
@@ -165,7 +182,6 @@ press any button to continue
       a3.AddDirection("west", b3);
       b1.AddDirection("south", b2);
       b2.AddDirection("south", b3);
-      b2.AddDirection("west", c2);
 
 
       //Add Items to Areas
@@ -218,7 +234,7 @@ press any button to continue
     {
       if (CurrentPlayer.Inventory.Find(i => i.Name == input) != null)
       {
-        CurrentArea.UseItem(input);
+        CurrentArea.UseItem(input, CurrentPlayer);
       }
       else
       {

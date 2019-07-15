@@ -5,7 +5,14 @@ namespace CastleGrimtol.Project.Models
     public bool isAlive = true;
     public override void Talk()
     {
-      System.Console.WriteLine(Dialogue["alive"]);
+      if (isAlive)
+      {
+        System.Console.WriteLine(Dialogue["alive"]);
+      }
+      else
+      {
+        System.Console.WriteLine(Dialogue["dead"]);
+      }
     }
     public Kerrek() : base()
     {

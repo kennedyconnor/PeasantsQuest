@@ -8,10 +8,13 @@ namespace CastleGrimtol.Project.Models
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public Item(string name, string description)
+    public string GetMessage { get; set; }
+
+    public Item(string name, string description, string getMessage)
     {
       Name = name;
       Description = description;
+      GetMessage = getMessage;
     }
   }
 }

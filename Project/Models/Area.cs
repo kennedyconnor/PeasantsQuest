@@ -11,6 +11,7 @@ namespace CastleGrimtol.Project.Models
     public List<Item> Items { get; set; }
     public Dictionary<string, Area> Directions { get; set; }
     public List<Character> Characters { get; set; }
+    public Dictionary<string, System.Action> UseCases { get; set; }
 
     public Area Go(string direction)
     {
@@ -50,45 +51,35 @@ namespace CastleGrimtol.Project.Models
 
     public void Talk(string character)
     {
-      foreach (var c in Characters)
+      foreach (Character c in Characters)
       {
         if (c.Name.ToLower() == character)
         {
           c.Talk();
+          return;
         }
-        else
-        {
-          System.Console.WriteLine("It's sad when you have to make up people to talk to.");
-        }
-
       }
+      System.Console.WriteLine("It's sad when you have to make up people to talk to.");
     }
 
-    public Item TakeItem(string input)
+    public virtual Item TakeItem(string input)
     {
       Item item = Items.Find(i => i.Name.ToLower() == input);
+      System.Console.WriteLine(item.GetMessage);
       return item;
     }
 
-    public void UseItem(string input)
+    public void UseItem(string input, Player CurrentPlayer)
     {
-
+      if (UseCases.ContainsKey(input))
+      {
+        UseCases[input]();
+      }
+      else
+      {
+        System.Console.WriteLine("No reason to use this here.");
+      }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void AddDirection(string direction, Area area)
 
@@ -117,7 +108,14 @@ namespace CastleGrimtol.Project.Models
     {
       Characters.Add(c);
     }
+    public void RemoveCharacter(Character c)
+    {
+      Characters.Remove(c);
+    }
+    public virtual void Checks(Player CurrentPlayer)
+    {
 
+    }
     public Area(string name, string description)
     {
       Name = name;
@@ -125,6 +123,15 @@ namespace CastleGrimtol.Project.Models
       Items = new List<Item>();
       Directions = new Dictionary<string, Area>();
       Characters = new List<Character>();
+      UseCases = new Dictionary<string, System.Action>();
+    }
+
+    public Area()
+    {
+      Items = new List<Item>();
+      Directions = new Dictionary<string, Area>();
+      Characters = new List<Character>();
+      UseCases = new Dictionary<string, System.Action>();
     }
   }
 }
