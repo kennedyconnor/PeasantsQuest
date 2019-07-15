@@ -60,8 +60,9 @@ namespace CastleGrimtol.Project
         Console.WriteLine("Pretty sure you need a DIRECTION to go in. Type HELP for help.");
         return;
       }
-      CurrentArea = CurrentArea.Go(input[1]);
-      CurrentArea.Checks(CurrentPlayer);
+      Area newArea = CurrentArea.Go(input[1]);
+      newArea.Checks(CurrentPlayer);
+      CurrentArea = newArea;
       Console.WriteLine();
       Console.WriteLine(CurrentArea.Description);
       Console.WriteLine();
@@ -133,7 +134,7 @@ press any button to continue
       Console.WriteLine();
       Console.WriteLine("With nothing left to lose, you swear to get revenge on the Wingaling Dragon in the name of burninated peasants everywhere. ");
       Console.WriteLine();
-      Console.WriteLine("You head WEST towards the mountain atop which TROGDOR lives.");
+      Console.WriteLine("You head NORTH towards the mountain atop which TROGDOR lives.");
       Console.ReadKey();
       Console.Clear();
     }
@@ -142,23 +143,30 @@ press any button to continue
     {
       //Items
 
-      Item baby = new Item("Baby", "Awww! Peasant babies are adorable. No wonder they fetch such a pretty penny on the black market.", "");
       Item belt = new Item("Belt", "Phew! This thing stinks like all getout. Why couldn't the Kerrek have kidnapped a hot wench or something that you could have saved?", "You claim the Kerrek's cool belt as your trophy. It stinks just like him! You start to miss him, a little.");
-      Item robe = new Item("Robe", "A vintage peasant robe! Just like grampa used to wear.", "");
-      Item sword = new Item("Sword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.", "");
+      Item robe = new Item("Robe", "A vintage peasant robe! Just like grampa used to wear, and the only remaining posession from your burninated cottage. Stylishly smouldering.", @"It's still burning - now you'll LOOK like a peasant and be ON FIRE like a peasant. 
+The fires of vengeance that burn in your heart help you ignore the pain from the literal flames on the robe.");
+      Item sword = new Item("Sword", "The TrogSword is for real. Hands-down the coolest item in the game. You can't wait to lop off that beefy arm of Trogdor's with this guy.", @"Something tells you this is a good idea and you lob the little one into the lake.
+You won't be arrested after all! The little guy has resurfaced safely, carrying a sword. 
+You take the sword - Way to go, baby! 
+Baby Dashing keeps on crawling headed off to a new life. 
+He becomes Valedictorian of his graduating class, goes to Scalding Lake State, gets a degree in Advanced Peasantry and lands a job at Thatch-Pro: building better cottages for a better tomorrow.
+You grow apart and the letters from him become fewer and fewer. 
+He develops a severe mead problem and blames you for never being there.");
       Item trinket = new Item("Trinket", "This trinket is weird. It looks like it can either kill you or make you the hit of your Christmas party.", "You reach into the bush to snag you some berries but instead find a Super Trinket! These things are awesome! You have a sneaking suspicion that SOMEONE in this game will need this thing.");
       Item map = new Item("Map", "A map of Peasantry. The only remaining posession from your burninated cottage.", "");
       Item shirt = new Item("Shirt", "This has got to be your favorite T-shirt ever. Oh, the times you had at Scalding Lake. Canoeing, fishing, stoning heathens. What a Blast!", "");
 
+      //Things
+
+
       //Rooms
-
-      Area a1 = new Area("The Stomping Grounds", "The Kerrek is stomping around angrily in a clearing covered in bramblevine and flattened grass. And it smells like a public latrine.");
+      KerrekDomain a1 = new KerrekDomain();
       PeacefulMeadow a2 = new PeacefulMeadow();
-      Area a3 = new Area("A Peasant Cottage", "There's a ranch-style thatched roof cottage here. A woman sits outside in a rocking chair, holding a swaddled baby.");
-      Area b1 = new Area("Pebble Lake", " There's definitely half a lake here with a sandy shore.");
+      PeasantCottage a3 = new PeasantCottage();
+      PebbleLake b1 = new PebbleLake();
       MountainPass b2 = new MountainPass();
-      Area b3 = new Area("Your Burninated Cottage", "The remains of your thatched-roof cottage lie before you. Some of it is still burning. You swear revenge against Trogdor. ");
-
+      YourCottage b3 = new YourCottage();
 
       //Characters
       Kerrek kerrek = new Kerrek();
@@ -167,30 +175,24 @@ press any button to continue
 
       a1.AddCharacter(kerrek);
       b2.AddCharacter(knight);
-      a2.AddCharacter(lady);
-
-
-
+      a3.AddCharacter(lady);
 
       //Relationships
       //automatically adds other half of relationship(East-West, North-South)
-
-      a1.AddDirection("west", b1);
+      b1.AddDirection("west", a1);
       a1.AddDirection("south", a2);
-      a2.AddDirection("west", b2);
+      b2.AddDirection("west", a2);
       a2.AddDirection("south", a3);
-      a3.AddDirection("west", b3);
+      b3.AddDirection("west", a3);
       b1.AddDirection("south", b2);
       b2.AddDirection("south", b3);
 
 
       //Add Items to Areas
-      a1.AddItem(belt);
+      // a1.AddItem(belt);
       a2.AddItem(trinket);
-      a3.AddItem(baby);
-      a3.AddItem(robe);
+      b3.AddItem(robe);
       b1.AddItem(sword);
-      b3.AddItem(map);
 
       //Player Init
       CurrentPlayer = new Player("Rather Dashing");
@@ -223,16 +225,15 @@ press any button to continue
       }
       else
       {
-        CurrentPlayer.Inventory.Add(item);
+        CurrentPlayer.addItem(item);
         CurrentArea.Items.Remove(item);
-        Console.WriteLine($"{item.Name} placed in your inventory.");
       }
 
     }
 
     public void UseItem(string input)
     {
-      if (CurrentPlayer.Inventory.Find(i => i.Name == input) != null)
+      if (CurrentPlayer.Inventory.Find(i => i.Name.ToLower() == input) != null)
       {
         CurrentArea.UseItem(input, CurrentPlayer);
       }

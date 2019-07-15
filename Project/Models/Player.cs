@@ -15,6 +15,7 @@ namespace CastleGrimtol.Project.Models
     public void addItem(Item item)
     {
       Inventory.Add(item);
+      System.Console.WriteLine();
       System.Console.WriteLine($"{item.Name} added to your inventory.");
       updateStatus(item);
     }
@@ -22,7 +23,11 @@ namespace CastleGrimtol.Project.Models
     public void updateStatus(Item item)
     {
       if (item.Name == "Belt") { Smells = true; }
-      if (item.Name == "Robe") { Looks = true; }
+      if (item.Name == "Robe")
+      {
+        Looks = true;
+        OnFire = true;
+      }
     }
 
     public Player(string name)

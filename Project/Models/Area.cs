@@ -11,7 +11,8 @@ namespace CastleGrimtol.Project.Models
     public List<Item> Items { get; set; }
     public Dictionary<string, Area> Directions { get; set; }
     public List<Character> Characters { get; set; }
-    public Dictionary<string, System.Action> UseCases { get; set; }
+    public Dictionary<string, System.Action<Player>> UseCases { get; set; }
+    public List<Thing> Things { get; set; }
 
     public Area Go(string direction)
     {
@@ -19,19 +20,18 @@ namespace CastleGrimtol.Project.Models
       if (Directions.ContainsKey(direction))
       {
         System.Console.WriteLine($"You travel {direction.ToUpper()} to {Directions[direction].Name}.");
-
         return Directions[direction];
       }
       System.Console.WriteLine("You can't go that way. Obviously.");
       return this;
     }
 
-    public void Look(string thing)
+    public void Look(string thingToLookAt)
     {
       //check room's items, characters, and things for match. Else print default line
       foreach (var i in Items)
       {
-        if (i.Name.ToLower() == thing)
+        if (i.Name.ToLower() == thingToLookAt)
         {
           System.Console.WriteLine(i.Description);
           return;
@@ -39,11 +39,20 @@ namespace CastleGrimtol.Project.Models
       }
       foreach (var c in Characters)
       {
-        if (c.Name.ToLower() == thing)
+        if (c.Name.ToLower() == thingToLookAt)
         {
           System.Console.WriteLine(c.Description);
           return;
         }
+      }
+      foreach (var t in Things)
+      {
+        if (t.Name.ToLower() == thingToLookAt)
+        {
+          System.Console.WriteLine(t.Description);
+          return;
+        }
+
       }
       System.Console.WriteLine("You don't need to look at that.");
       return;
@@ -65,7 +74,11 @@ namespace CastleGrimtol.Project.Models
     public virtual Item TakeItem(string input)
     {
       Item item = Items.Find(i => i.Name.ToLower() == input);
-      System.Console.WriteLine(item.GetMessage);
+      if (item != null)
+      {
+        System.Console.WriteLine(item.GetMessage);
+      }
+      System.Console.WriteLine();
       return item;
     }
 
@@ -73,7 +86,7 @@ namespace CastleGrimtol.Project.Models
     {
       if (UseCases.ContainsKey(input))
       {
-        UseCases[input]();
+        UseCases[input](CurrentPlayer);
       }
       else
       {
@@ -123,7 +136,8 @@ namespace CastleGrimtol.Project.Models
       Items = new List<Item>();
       Directions = new Dictionary<string, Area>();
       Characters = new List<Character>();
-      UseCases = new Dictionary<string, System.Action>();
+      UseCases = new Dictionary<string, System.Action<Player>>();
+      Things = new List<Thing>();
     }
 
     public Area()
@@ -131,7 +145,8 @@ namespace CastleGrimtol.Project.Models
       Items = new List<Item>();
       Directions = new Dictionary<string, Area>();
       Characters = new List<Character>();
-      UseCases = new Dictionary<string, System.Action>();
+      UseCases = new Dictionary<string, System.Action<Player>>();
+      Things = new List<Thing>();
     }
   }
 }
