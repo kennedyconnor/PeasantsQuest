@@ -9,6 +9,7 @@ namespace CastleGrimtol.Project.Models
     public Dictionary<string, string> Dialogue { get; set; }
 
     public virtual void Talk() { }
+    public virtual void Talk(Player CurrentPlayer) { }
 
     public Character()
     {

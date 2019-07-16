@@ -8,6 +8,7 @@ namespace CastleGrimtol.Project.Models
   {
     public string PlayerName { get; set; }
     public List<Item> Inventory { get; set; }
+    public bool isAlive = true;
     public bool Smells = false;
     public bool Looks = false;
     public bool OnFire = false;

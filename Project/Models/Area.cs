@@ -58,13 +58,14 @@ namespace CastleGrimtol.Project.Models
       return;
     }
 
-    public void Talk(string character)
+    public void Talk(string character, Player CurrentPlayer)
     {
       foreach (Character c in Characters)
       {
         if (c.Name.ToLower() == character)
         {
-          c.Talk();
+          if (character == "kerrek") { c.Talk(CurrentPlayer); }
+          else { c.Talk(); }
           return;
         }
       }

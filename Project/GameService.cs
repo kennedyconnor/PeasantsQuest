@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CastleGrimtol.Project.Interfaces;
 using CastleGrimtol.Project.Models;
 using System;
+using System.Threading;
 
 namespace CastleGrimtol.Project
 {
@@ -101,7 +102,7 @@ Use 'Quit' to exit game.
     {
       if (input.Length > 1)
       {
-        CurrentArea.Talk(input[1]);
+        CurrentArea.Talk(input[1], CurrentPlayer);
       }
       else { Console.WriteLine("Don't talk to yourself."); }
     }
@@ -210,10 +211,44 @@ He develops a severe mead problem and blames you for never being there.");
 
       while (Running)
       {
-        GetUserInput();
-
+        if (CurrentArea.Name == "Trogdor's Lair") { FinalRoom(); }
+        else if (CurrentPlayer.isAlive == false) { Die(); }
+        else GetUserInput();
       }
 
+    }
+
+    public void Die()
+    {
+      Console.WriteLine();
+      Console.WriteLine("You're dead. Congratulations!");
+      Thread.Sleep(1000);
+      Quit();
+    }
+
+    public void FinalRoom()
+    {
+      Console.WriteLine(@"This is it! You hurl the Trog-Sword with all your might at the sleeping Burninator.
+Now you've done it! Trogdor's awake and the Trog-Sword doesn't seem to be doing a whole lot.
+Your legs lock in fear, your eyes glaze over and you wish for some Depeasant adult undergarments. But you think you hear Trogdor whimpering!
+Aw crap, that's you whimpering. At least your voice still works, I guess.");
+      Console.ReadKey();
+      Console.Clear();
+      Console.WriteLine(@"You scream that your name is Rather Dashing and that Trogdor burninated your cottage and you're here for revenge!
+'Sup, mortal,' booms Trogdor. 'I really appreciate you making the effort to come all the way up here and vanquish me and all. But, I'm kinda indestructible.'
+'Yeah, I can't be killed. I'm surprised nobody mentioned that to you. I'll admit though, you've gotten farther than anybody else ever has. I bet they'll make a statue or something in honor of you somewheres.'
+'I can honestly say it'll be a pleasure and an honor to burninate you, Rather Dashing.'
+Aw that sure was nice of him!
+The Trogdor uncermoniously burninates you.");
+      Console.ReadKey();
+      Console.Clear();
+      Console.WriteLine(@"Congratulations! You've won! 
+No one can kill Trogdor but you came closer than anybody ever! Way to go!
+
+THE END");
+      Console.ReadKey();
+
+      Quit();
     }
 
     public void TakeItem(string input)

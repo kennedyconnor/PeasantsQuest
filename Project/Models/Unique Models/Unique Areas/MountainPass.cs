@@ -11,7 +11,7 @@ namespace CastleGrimtol.Project.Models
       {
 
         Description = "You've reached the mountain pass that leads to Trogdor's lair. The cool knight smiles at you.";
-        this.AddDirection("east", new Area("Trogdor's Lair", "You're in a giant cavern which houses a giant dragon. You didn't shrink or anything."));
+        this.AddDirection("east", new Lair());
         Characters[0].Dialogue["talk"] = @"'Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.'
 This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!";
       }
